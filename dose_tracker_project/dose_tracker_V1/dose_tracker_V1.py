@@ -2,11 +2,17 @@ import tkinter as tk
 from tkinter import ttk
 import ttkbootstrap as ttk
 import pandas as pd
+import os
 import time
 import math
 
+filepath = os.getcwd()
+data_filepath = filepath + "\dose_tracker_project\dose_tracker_V1\\"
+
 current_time = time.strftime('%H:%M')
-print(current_time)
+
+data = pd.read_csv(data_filepath + 'data.csv')
+print(data.to_string())
 
 def run_func():
     data1['text']=name_var.get()
@@ -17,16 +23,29 @@ def run_func():
     print(dose_var.get())
     print(time_taken_var.get())
 
+#Eli's advice on how to do the check case for this function:
+#so you can get the column and then typecast it as a list
+#and python has the keyword 'in'
+#so you can do something like 
+#if word in list:
+#    do thing
+#so I think thats the best way to do it
+    
 def check_preset(var, indx, mode):
     value = name_var.get()
     print("usr picked", value)
-    match value:
+    for medications in data:
+        print('check')
+        if medications == value:
+            print('valid')
+        
+    '''match value:
         case "case1":
             print("Case 1")
         case "case2":
             print("Case 2")
         case _:
-            print("Shit's fucked.")
+            print("Shit's fucked.")'''
 
 window = tk.Tk()
 window.title('Dose Tracker')
@@ -59,7 +78,7 @@ out_data_frame = ttk.Frame(output_frame)
 out_data_frame.place(y=5, x=135, relwidth=0.5, relheight=0.5)
  
 name_in_label = ttk.Label(input_frame_frame, text='Medication Name')
-name_entry = ttk.Combobox(input_frame_frame, textvariable=name_var, width=17)
+name_entry = ttk.Combobox(input_frame_frame, textvariable=name_var, width=18)
 name_entry['values'] = ('Adderall','Caffiene','Third Thing')
 halflife_label = ttk.Label(input_frame_frame, text='Half Life')
 halflife_entry = ttk.Entry(input_frame_frame, textvariable=halflife_var, width=9)
