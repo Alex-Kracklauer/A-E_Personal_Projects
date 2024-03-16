@@ -13,6 +13,9 @@ current_time = time.strftime('%H:%M')
 
 data = pd.read_csv(data_filepath + 'data.csv')
 print(data.to_string())
+med_list = (list(data["medication"]))
+print(med_list)
+print(data.at["Adderall", "half-life"])
 
 def run_func():
     data1['text']=name_var.get()
@@ -23,29 +26,11 @@ def run_func():
     print(dose_var.get())
     print(time_taken_var.get())
 
-#Eli's advice on how to do the check case for this function:
-#so you can get the column and then typecast it as a list
-#and python has the keyword 'in'
-#so you can do something like 
-#if word in list:
-#    do thing
-#so I think thats the best way to do it
-    
 def check_preset(var, indx, mode):
     value = name_var.get()
-    print("usr picked", value)
-    for medications in data:
-        print('check')
-        if medications == value:
-            print('valid')
-        
-    '''match value:
-        case "case1":
-            print("Case 1")
-        case "case2":
-            print("Case 2")
-        case _:
-            print("Shit's fucked.")'''
+    if value in med_list:
+        halflife_var.set(data.loc[data["half-life"], [value]])
+        HL_unit_var.set('test val')
 
 window = tk.Tk()
 window.title('Dose Tracker')
@@ -79,12 +64,12 @@ out_data_frame.place(y=5, x=135, relwidth=0.5, relheight=0.5)
  
 name_in_label = ttk.Label(input_frame_frame, text='Medication Name')
 name_entry = ttk.Combobox(input_frame_frame, textvariable=name_var, width=18)
-name_entry['values'] = ('Adderall','Caffiene','Third Thing')
+name_entry['values'] = med_list
 halflife_label = ttk.Label(input_frame_frame, text='Half Life')
 halflife_entry = ttk.Entry(input_frame_frame, textvariable=halflife_var, width=9)
 HL_unit_label = ttk.Label(input_frame_frame, text='Unit')
 HL_unit_entry = ttk.Combobox(input_frame_frame, textvariable=HL_unit_var, width=7)
-HL_unit_entry['values'] = ('minutes', 'hours', 'days')
+HL_unit_entry['values'] = med_list
 dose_label = ttk.Label(input_frame_frame, text='Dose Taken')
 dose_entry = ttk.Entry(input_frame_frame, textvariable=dose_var, width=9)
 dose_unit_label = ttk.Label(input_frame_frame, text='Unit')
