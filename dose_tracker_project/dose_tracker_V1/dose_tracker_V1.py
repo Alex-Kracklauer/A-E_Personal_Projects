@@ -11,26 +11,23 @@ data_filepath = filepath + "\dose_tracker_project\dose_tracker_V1\\"
 
 current_time = time.strftime('%H:%M')
 
-data = pd.read_csv(data_filepath + 'data.csv')
-print(data.to_string())
-med_list = (list(data["medication"]))
-print(med_list)
-print(data.at["Adderall", "half-life"])
+data = pd.read_csv(data_filepath + 'data.csv', index_col='medication')
+med_list = list(data.index)
 
 def run_func():
     data1['text']=name_var.get()
 
-    #debug bs
+    #DEBUG PRINTS
     print(name_var.get())
     print(halflife_var.get())
     print(dose_var.get())
     print(time_taken_var.get())
 
-def check_preset(var, indx, mode):
+def load_preset(var, indx, mode):
     value = name_var.get()
     if value in med_list:
-        halflife_var.set(data.loc[data["half-life"], [value]])
-        HL_unit_var.set('test val')
+        halflife_var.set(data.at[value, "half-life"])
+        HL_unit_var.set(data.at[value, "HL_unit"])
 
 window = tk.Tk()
 window.title('Dose Tracker')
@@ -69,12 +66,12 @@ halflife_label = ttk.Label(input_frame_frame, text='Half Life')
 halflife_entry = ttk.Entry(input_frame_frame, textvariable=halflife_var, width=9)
 HL_unit_label = ttk.Label(input_frame_frame, text='Unit')
 HL_unit_entry = ttk.Combobox(input_frame_frame, textvariable=HL_unit_var, width=7)
-HL_unit_entry['values'] = med_list
+HL_unit_entry['values'] = ('sec','min','hr')
 dose_label = ttk.Label(input_frame_frame, text='Dose Taken')
 dose_entry = ttk.Entry(input_frame_frame, textvariable=dose_var, width=9)
 dose_unit_label = ttk.Label(input_frame_frame, text='Unit')
 dose_unit_entry = ttk.Combobox(input_frame_frame, textvariable=dose_unit_var, width=7)
-dose_unit_entry['values'] = ('mg','other unit','lightyears')
+dose_unit_entry['values'] = ('mg','g')
 time_taken_label = ttk.Label(input_frame_frame, text='Time Administered')
 time_taken_entry = ttk.Entry(input_frame_frame, textvariable=time_taken_var, width=20)
 time_taken_entry.insert(0, current_time)
@@ -94,7 +91,7 @@ time_taken_label.grid(row=6, column=0, columnspan=2)
 time_taken_entry.grid(row=7, column=0, columnspan=2)
 run_button.grid(row=8, column=0, columnspan=2, pady=10)
 
-name_var.trace_add('write', check_preset)
+name_var.trace_add('write', load_preset)
 
 ttk.Label(out_label_frame, text='medication:').pack(anchor='nw')
 ttk.Label(out_label_frame, text='blood concentration:').pack(anchor='nw')
