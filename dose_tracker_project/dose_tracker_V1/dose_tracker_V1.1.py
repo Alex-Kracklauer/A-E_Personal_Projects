@@ -4,24 +4,65 @@ import ttkbootstrap as ttk
 import pandas as pd
 import os
 import time
-import datetime
+from datetime import datetime, timedelta
 import math
+
+window = tk.Tk()
+window.title('Dose Tracker')
+window.geometry('500x290')
+
+
+name_var = tk.StringVar()
+halflife_var = tk.StringVar()
+HL_unit_var = tk.StringVar()
+dose_var = tk.StringVar()
+dose_unit_var = tk.StringVar()
+hr_taken_var= tk.StringVar()
+min_taken_var= tk.StringVar()
+
 
 filepath = os.getcwd()
 data_filepath = filepath + "\\dose_tracker_project\\dose_tracker_V1\\"
 
-epoch_time = time.localtime()
-current_time = time.ctime()
-hm_time = time.strftime("%H:%M", epoch_time)
-
-hour = time.strftime("%H", epoch_time)
-minute = time.strftime("%M", epoch_time)
+current_time = time.localtime()
+print(current_time)
+hm_time = time.strftime("%H:%M", current_time)
+hour = time.strftime("%H", current_time)
+minute = time.strftime("%M", current_time)
 print(hour)
 print(minute)
 
+
+
+# Convert struct_time to a string
+time_string = time.strftime("%m/%d/%Y, %H:%M:%S", current_time)
+print(time_string)
+
+test_hr = "04"
+test_min = "07"
+date = time.strftime("%m/%d/%Y", current_time)
+kys = date+test_hr+":"+test_min+":"+time.strftime("%S", current_time)
+print(kys)
+
+new_struct_time = time.strptime(kys, "%m/%d/%Y, %H:%M:%S")
+print(new_struct_time)
+
+'''
+fuckaround_string = time.strftime("%m/%d/%Y, test_hr, %H:%M:%S", current_time)
+print(fuckaround_string)
+'''
+'''
+# Convert the string back to struct_time
+new_struct_time = time.strptime(time_string, "%m/%d/%Y, %H:%M:%S")
+print(new_struct_time)
+'''
+
+
+'''
 #this turns a structtime back into epoch time, don't know how tho
 time.mktime
 
+current_time.tm_min = hr_taken_var
 
 #experiment to figure out mktime
 print(epoch_time)
@@ -30,7 +71,7 @@ print(time.mktime(epoch_time))
 
 
 print(current_time)
-
+'''
 
 data = pd.read_csv(data_filepath + 'data.csv', index_col='medication')
 med_list = list(data.index)
@@ -50,18 +91,6 @@ def load_preset(var, indx, mode):
     if value in med_list:
         halflife_var.set(data.at[value, "half-life"])
         HL_unit_var.set(data.at[value, "HL_unit"])
-
-window = tk.Tk()
-window.title('Dose Tracker')
-window.geometry('500x290')
-
-name_var = tk.StringVar()
-halflife_var = tk.StringVar()
-HL_unit_var = tk.StringVar()
-dose_var = tk.StringVar()
-dose_unit_var = tk.StringVar()
-hr_taken_var= tk.StringVar()
-min_taken_var= tk.StringVar()
 
 
 input_frame = ttk.LabelFrame(window, text='input')
@@ -97,13 +126,9 @@ dose_unit_label = ttk.Label(input_frame_frame, text='Unit')
 dose_unit_entry = ttk.Combobox(input_frame_frame, textvariable=dose_unit_var, width=7)
 dose_unit_entry['values'] = ('mg','g')
 time_taken_label = ttk.Label(input_frame_frame, text='Time Administered')
-
-
 run_button = ttk.Button(input_frame_frame, text='Process', command=run_func, width=18)
 
-
 time_frame = tk.Frame(input_frame_frame)
-
 hr_taken_entry = ttk.Entry(time_frame, textvariable=hr_taken_var, width=2)
 hr_taken_entry.insert(0, hour)
 time_colon = ttk.Label(time_frame, text=":")
@@ -113,8 +138,6 @@ min_taken_entry.insert(0, minute)
 hr_taken_entry.grid(row=0, column=0)
 time_colon.grid(row=0, column=1)
 min_taken_entry.grid(row=0, column=2)
-
-
 
 name_in_label.grid(row=0, column=0, columnspan=2)
 name_entry.grid(row=1, column=0, columnspan=2)
