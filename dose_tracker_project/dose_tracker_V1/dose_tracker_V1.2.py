@@ -32,6 +32,7 @@ current_time = time.localtime()
 #print(current_time)
 hour = time.strftime("%H", current_time)
 minute = time.strftime("%M", current_time)
+ep_time_taken = (time.mktime(time.localtime()))
 
 def process_time():
     #pull data to insert to string
@@ -49,6 +50,7 @@ def process_time():
 
     #generate time administered in epoch format for save data
     ep_time_taken = time.mktime(output_time)
+
     #print(ep_time_taken)
 
     #function output
@@ -58,14 +60,14 @@ def process_time():
 def run_func():
     data1['text']=name_var.get()
     data4['text']=process_time()
-    #DEBUG PRINTS
-    '''
-    print(name_var.get())
-    print(halflife_var.get())
-    print(dose_var.get())
-    print(hr_taken_var.get())
-    print(min_taken_var.get())
-    '''
+    
+    #output variable bank
+    class med:
+        name = name_var.get()
+        half = halflife_var.get()
+        dose = dose_var
+        time = time.mktime(process_time())
+    print(med)
 
 #pull medication data from the preset file
 def load_preset(var, indx, mode):
@@ -73,7 +75,6 @@ def load_preset(var, indx, mode):
     if value in med_list:
         halflife_var.set(data.at[value, "half-life"])
         HL_unit_var.set(data.at[value, "HL_unit"])
-        #following code may not work until csv fixed
         dose_unit_var.set(data.at[value, "dose_unit"])
 
 
