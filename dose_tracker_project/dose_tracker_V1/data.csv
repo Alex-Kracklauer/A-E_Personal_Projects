@@ -1,4 +1,4 @@
-medication,half-life,HL_unit
-Acetaminophen,2.5,hr
-Adderall,12,hr
-Caffiene,5,hr
+medication,half-life,HL_unit,dose_unit
+Acetaminophen,2.5,hr,mg
+Adderall,12,hr,mg
+Caffiene,5,hr,mg

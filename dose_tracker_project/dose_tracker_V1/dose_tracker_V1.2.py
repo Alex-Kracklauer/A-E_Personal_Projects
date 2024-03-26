@@ -20,7 +20,6 @@ dose_var = tk.StringVar()
 dose_unit_var = tk.StringVar()
 hr_taken_var= tk.StringVar()
 min_taken_var= tk.StringVar()
-time_taken = "0"
 
 #filepath lookup to locate data files
 filepath = os.getcwd()
@@ -53,14 +52,12 @@ def process_time():
     #print(ep_time_taken)
 
     #function output
-    global time_taken
-    time_taken = output_time
+    return output_time
 
 #proceses user input and generate output data
 def run_func():
-    process_time()
     data1['text']=name_var.get()
-    data4['text']=time_taken
+    data4['text']=process_time()
     #DEBUG PRINTS
     '''
     print(name_var.get())
@@ -158,6 +155,3 @@ data3.pack(anchor='nw')
 data4.pack(anchor='nw')
 
 window.mainloop()
-
-#V1.1, this version processes most of the required user data
-#the most important addition of 1.1 is the code to process time input data
