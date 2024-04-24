@@ -14,9 +14,9 @@ window.geometry('500x290')
 
 #tkinter variables
 name_var = tk.StringVar()
-halflife_var = tk.StringVar()
+halflife_var = tk.IntVar()
 HL_unit_var = tk.StringVar()
-dose_var = tk.StringVar()
+dose_var = tk.IntVar()
 dose_unit_var = tk.StringVar()
 hr_taken_var= tk.StringVar()
 min_taken_var= tk.StringVar()
@@ -32,7 +32,7 @@ current_time = time.localtime()
 #print(current_time)
 hour = time.strftime("%H", current_time)
 minute = time.strftime("%M", current_time)
-ep_time_taken = (time.mktime(time.localtime()))
+ep_time = time.time()
 
 def process_time():
     #pull data to insert to string
@@ -56,18 +56,40 @@ def process_time():
     #function output
     return output_time
 
+#class containing variables for currently tracked medication objects
+class med:
+        def __init__(self, name, halflife, dose, time):
+            self.name = name
+            self.halflife = halflife
+            self.dose = dose
+            self.time = time
+
+
 #proceses user input and generate output data
 def run_func():
     data1['text']=name_var.get()
     data4['text']=process_time()
     
-    #output variable bank
-    class med:
-        name = name_var.get()
-        half = halflife_var.get()
-        dose = dose_var
-        time = time.mktime(process_time())
-    print(med)
+    #generate new med object from usr input
+    m1 = med(name_var.get(), halflife_var.get(), dose_var.get(), time.mktime(process_time()))
+
+
+    #debug
+    print(ep_time)
+    #math goes here
+    time_d = ep_time - m1.time
+    print("delta", time_d)
+    #formula --> Dosage(t) = Dosage(0) × 0.5^(t/T)
+    decayed_dose = (m1.dose * math.pow(0.5, ((time_d/3600)/m1.halflife)))
+    print("decayed dose:", decayed_dose)
+
+
+    #debug prints of variable values
+    print(m1.name)
+    print(m1.halflife)
+    print(m1.dose)
+    print(m1.time)
+
 
 #pull medication data from the preset file
 def load_preset(var, indx, mode):
@@ -96,7 +118,7 @@ out_label_frame.place(x=5, y=5, relwidth=0.4, relheight=0.5)
 
 out_data_frame = ttk.Frame(output_frame)
 out_data_frame.place(y=5, x=135, relwidth=0.5, relheight=0.5)
- 
+
 name_in_label = ttk.Label(input_frame_frame, text='Medication Name')
 name_entry = ttk.Combobox(input_frame_frame, textvariable=name_var, width=18)
 name_entry['values'] = med_list
